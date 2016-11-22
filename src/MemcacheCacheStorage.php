@@ -16,6 +16,9 @@ class MemcacheCacheStorage implements CacheStorageInterface
      */
     protected $configs;
 
+    /**
+     * @var bool
+     */
     protected $connected = false;
 
     /**
