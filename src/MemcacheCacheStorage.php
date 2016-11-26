@@ -2,8 +2,9 @@
 namespace Phpfox\Memcache;
 
 use Memcache;
-use Phpfox\Cache\CacheItem;
-use Phpfox\Cache\CacheStorageInterface;
+use Phpfox\Kernel\Cache\CacheItem;
+use Phpfox\Kernel\Cache\CacheItemInterface;
+use Phpfox\Kernel\Cache\CacheStorageInterface;
 
 class MemcacheCacheStorage implements CacheStorageInterface
 {
@@ -39,6 +40,13 @@ class MemcacheCacheStorage implements CacheStorageInterface
 
     }
 
+    public function setItem($key, $value, $ttl = 0)
+    {
+        $this->ready();
+
+        $this->save(new CacheItem($key, $value, $ttl));
+    }
+
     public function ready()
     {
         if ($this->connected) {
@@ -67,6 +75,26 @@ class MemcacheCacheStorage implements CacheStorageInterface
 
     }
 
+    public function save(CacheItemInterface $item)
+    {
+        $this->ready();
+
+        $this->memcache->set($item->key(), $item, MEMCACHE_COMPRESSED,
+            $item->ttl());
+    }
+
+    public function getItems($keys = [])
+    {
+        $this->ready();
+
+        $result = [];
+        foreach ($keys as $k => $v) {
+            $result[$k] = $this->getItem($v);
+        }
+
+        return $result;
+    }
+
     public function getItem($key)
     {
         $this->ready();
@@ -81,25 +109,6 @@ class MemcacheCacheStorage implements CacheStorageInterface
         }
 
         return $data;
-    }
-
-    public function setItem($key, $value, $ttl = 0)
-    {
-        $this->ready();
-
-        $this->save(new CacheItem($key, $value, $ttl));
-    }
-
-    public function getItems($keys = [])
-    {
-        $this->ready();
-
-        $result = [];
-        foreach ($keys as $k => $v) {
-            $result[$k] = $this->getItem($v);
-        }
-
-        return $result;
     }
 
     public function hasItem($key)
@@ -131,14 +140,6 @@ class MemcacheCacheStorage implements CacheStorageInterface
         array_walk($keys, function ($v) {
             $this->memcache->delete($v);
         });
-    }
-
-    public function save(CacheItemInterface $item)
-    {
-        $this->ready();
-
-        $this->memcache->set($item->key(), $item, MEMCACHE_COMPRESSED,
-            $item->ttl());
     }
 
     function __sleep()

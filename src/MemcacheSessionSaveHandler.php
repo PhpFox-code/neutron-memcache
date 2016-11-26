@@ -1,15 +1,7 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: namnv
- * Date: 11/22/16
- * Time: 4:29 PM
- */
-
 namespace Phpfox\Memcache;
 
-
-use Phpfox\Session\SaveHandlerInterface;
+use Phpfox\Kernel\Session\SaveHandlerInterface;
 
 class MemcacheSessionSaveHandler implements SaveHandlerInterface
 {

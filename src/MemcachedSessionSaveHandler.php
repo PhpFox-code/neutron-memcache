@@ -2,8 +2,7 @@
 
 namespace Phpfox\Memcache;
 
-
-use Phpfox\Session\SaveHandlerInterface;
+use Phpfox\Kernel\Session\SaveHandlerInterface;
 
 class MemcachedSessionSaveHandler implements SaveHandlerInterface
 {

@@ -2,7 +2,9 @@
 namespace Phpfox\Memcache;
 
 use Memcached;
-use Phpfox\Cache\CacheStorageInterface;
+use Phpfox\Kernel\Cache\CacheItem;
+use Phpfox\Kernel\Cache\CacheItemInterface;
+use Phpfox\Kernel\Cache\CacheStorageInterface;
 
 class MemcachedCacheStorage implements CacheStorageInterface
 {
@@ -38,6 +40,13 @@ class MemcachedCacheStorage implements CacheStorageInterface
 
     }
 
+    public function setItem($key, $value, $ttl = 0)
+    {
+        $this->ready();
+
+        $this->save(new CacheItem($key, $value, $ttl));
+    }
+
     public function ready()
     {
         if ($this->connected) {
@@ -67,6 +76,25 @@ class MemcachedCacheStorage implements CacheStorageInterface
 
     }
 
+    public function save(CacheItemInterface $item)
+    {
+        $this->ready();
+
+        $this->memcache->set($item->key(), $item, $item->ttl());
+    }
+
+    public function getItems($keys = [])
+    {
+        $this->ready();
+
+        $result = [];
+        foreach ($keys as $k => $v) {
+            $result[$k] = $this->getItem($v);
+        }
+
+        return $result;
+    }
+
     public function getItem($key)
     {
         $this->ready();
@@ -81,25 +109,6 @@ class MemcachedCacheStorage implements CacheStorageInterface
         }
 
         return $data;
-    }
-
-    public function setItem($key, $value, $ttl = 0)
-    {
-        $this->ready();
-
-        $this->save(new CacheItem($key, $value, $ttl));
-    }
-
-    public function getItems($keys = [])
-    {
-        $this->ready();
-
-        $result = [];
-        foreach ($keys as $k => $v) {
-            $result[$k] = $this->getItem($v);
-        }
-
-        return $result;
     }
 
     public function hasItem($key)
@@ -133,22 +142,10 @@ class MemcachedCacheStorage implements CacheStorageInterface
         });
     }
 
-    public function save(CacheItemInterface $item)
-    {
-        $this->ready();
-
-        $this->memcache->set($item->key(), $item, $item->ttl());
-    }
-
     function __sleep()
     {
-        $this->memcache->close();
+        $this->memcache = null;
         $this->connected = false;
         return [];
-    }
-
-    function __wakeup()
-    {
-        // TODO: Implement __wakeup() method.
     }
 }
