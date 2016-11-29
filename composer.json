@@ -1,5 +1,5 @@
 {
-  "name": "codelego/phpfox-memcache",
+  "name": "codelego/neutron-memcache",
   "description": "Memcached library for phpfox framework.",
   "type": "library",
   "license": "MIT",
