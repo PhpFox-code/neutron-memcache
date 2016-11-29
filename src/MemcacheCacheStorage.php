@@ -1,10 +1,10 @@
 <?php
-namespace Phpfox\Memcache;
+namespace Neutron\Memcache;
 
 use Memcache;
-use Phpfox\Kernel\Cache\CacheItem;
-use Phpfox\Kernel\Cache\CacheItemInterface;
-use Phpfox\Kernel\Cache\CacheStorageInterface;
+use Neutron\Kernel\Cache\CacheItem;
+use Neutron\Kernel\Cache\CacheItemInterface;
+use Neutron\Kernel\Cache\CacheStorageInterface;
 
 class MemcacheCacheStorage implements CacheStorageInterface
 {

@@ -1,7 +1,7 @@
 <?php
-namespace Phpfox\Memcache;
+namespace Neutron\Memcache;
 
-use Phpfox\Kernel\Session\SaveHandlerInterface;
+use Neutron\Kernel\Session\SaveHandlerInterface;
 
 class MemcacheSessionSaveHandler implements SaveHandlerInterface
 {

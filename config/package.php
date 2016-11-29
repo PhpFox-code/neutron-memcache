@@ -1,6 +1,6 @@
 <?php
 
-namespace Phpfox\Memcache;
+namespace Neutron\Memcache;
 
 return [
     'session.drivers' => [
